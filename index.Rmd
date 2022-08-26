@@ -1,0 +1,176 @@
+---
+title: "Seminário"
+subtitle: "2ECO118 - Economia Brasileira"
+author: "João P. Cortapasso <br> Mestrando em Economia Regional <br><br><a href='https://github.com/cortapasso'><i class='fa-brands fa-github'></i>&nbsp; cortapasso</a>"
+date: 06/09/2022 <br> <img src="img/ppe.png" class="imgcenter"/>
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [default, "style/custom.css"]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: r
+      countIncrementalSlides: false
+      ratio: "16:9"
+    includes:
+      in_header: "style/header.html"
+---
+```{r, setup, echo=FALSE, message=FALSE, results="hide", warning=FALSE}
+options(encoding = "UTF-8")
+options(htmltools.dir.version = FALSE)
+```
+
+class:center, middle, inverse
+
+background-image: url(img/bg.webp)
+background-size: cover
+
+# Os impactos do "milagre econômico" na distribuição de renda no Brasil
+
+---
+
+class: left
+
+# Contexto histórico
+
+###Antes de abordar o período denominado "milagre econômico" devemos entender o contexto histórico da época:
+
+--
+
+- .texto[Para Cano (2004), o padrão de acumulação no Brasil após a crise de 1929 transformou a
+economia brasileira voltada a exportação para uma que visava a industrialização, onde o principal
+determinante seria o investimento autonômo.]
+
+--
+
+- .texto[A Segunda Guerra Mundial também se destaca
+como um fator determinante para a ocorrência do milagre, tendo em vista que após o término, a
+produção da indústria de bens de consumo não-duráveis se intensificou.]
+
+
+---
+
+class: left
+
+# Contexto histórico
+
+- .texto[Durante o Estado Novo (1937-1945), a industrialização foi baseada na montagem de um
+parque industrial com indústrias de bens de capital e indústrias de base, fazendo com que o
+Estado assumisse um papel essencial para a eclosão do milagre uma vez que Vargas seguia uma
+linha intervencionista e nacionalista, também foi durante o II Governo Vargas (1951-1954) que a
+criação de empresas estatais — a Petrobras e a Eletrobras — tomou forças, o setor de transportese beneficiou por conta da implantação de uma indústria automobilística no país, incentivando
+o desenvolvimento da indústria nacional de autopeças.]
+
+
+---
+
+class: left
+
+# Contexto histórico
+
+- .texto[O governo de Juscelino Kubitschek (1956-1961) buscou capital estrangeiro para financiar
+o setor industrial nacional, com o seu discurso de 50 anos em 5, serviu para elevar muito a
+divida externa do país. Seu plano de metas visava os setores de energia, transportes, alimentação,
+indústria de base, educação e a construção da nova capital federal de Brasília.]
+
+--
+
+- .texto[Além disso, o déficit na balança comercial tornou-se motivo de preocupação por parte
+dos empresários estrangeiros, a inflação também chegou a níveis alarmantes o que fez com que o
+FMI (Fundo Monetário Internacional) passasse a intervir na economia brasileira fazendo algumas
+exigências.]
+
+---
+
+class: left
+
+# Contexto histórico
+
+- .texto[Os anos seguintes foram marcados por crises políticas e econômicas, Jânio Quadros,
+sucessor de Juscelino, renunciara em 1961, abrindo caminho para João Goulart, governo o qual a
+principal característica fora a entrada de grandes empresas multinacionais. Em 1964 João foi
+deposto e os militares assumiam o poder.]
+
+
+---
+
+class: middle, center, inverse
+
+background-image: url(img/linechart.jpg)
+background-size: cover
+
+# Produto interno bruto: variação real anual <br> entre 1945 a 1965
+
+---
+
+class: center
+
+```{r, echo=FALSE, message=FALSE, results="hide", warning=FALSE}
+options(encoding = "UTF-8")
+library(ipeadatar)
+library(tidyverse)
+library(ggplot2)
+library(tsibble)
+series <- ipeadatar::ipeadata("SCN10_PIBG10")
+series <- series %>% select(-uname, -tcode, -code)
+
+series_ts <-  tsibble(
+  Ano = (series$date),
+  Valor = series$value,
+  index = Ano
+)
+
+#Decidi deixar esse jeito de lado, pois o de baixo da um resultado melhor :D
+#series_plot <- series_ts %>% 
+#  ggplot(aes(x = Ano, y = Valor)) +
+#    labs(title = "Produto Interno bruto a preços de mercado: variação real anual",
+#         subtitle = "1945-1965",
+#         caption = "Fonte: Ipeadata",
+#         x = "Anos",
+#         y = "Variação em (%)") +
+#    geom_line(colour = "#008FD5", size = 1) +
+#    ylim(0, 12) +
+#    scale_x_date(limits = as.Date(c("1945-01-01","1965-01-01")), date_labels = "%Y", date_breaks = "5 years") +
+#    theme(aspect.ratio = 1) +
+#    theme(plot.caption.position = "plot",
+#        plot.caption = element_text(hjust = 0)) +
+#    theme(plot.title.position = "plot") +
+#    theme(axis.line = element_line(size = 0.5))
+
+teste <- series_ts %>%
+  filter(between(Ano, as.Date("1945-01-01"), as.Date("1965-01-01"))) %>% 
+  ggplot(aes(x = Ano, y = Valor)) +
+  labs(title = "Produto Interno bruto a preços de mercado: variação real anual",
+       subtitle = "1945-1965",
+       caption = "Fonte: Ipeadata",
+       x = "Anos",
+       y = "Variação em (%)") +
+  geom_line(colour = "#008FD5", size = 1) +
+  ylim(0, 12) +
+  theme(aspect.ratio = 0.8) +
+  theme(plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0)) +
+  theme(plot.title.position = "plot") +
+  theme(axis.line = element_line(size = 0.5))
+
+#Anotacao, apagar depois, vai servir pra mostrar quando começa a ditadura etc.
+#annotate(geom="text", x=as.Date("1989-01-01"), y=42, label="Plano Verão", family="serif") +
+#annotate(geom="point", x=as.Date("1989-01-01"), y=37, size=5, shape=1, fill="transparent") +
+#annotate(geom="text", x=as.Date("1991-03-01"), y=82, label="Plano Collor I", family="serif") +
+#annotate(geom="point", x=as.Date("1990-03-01"), y=82, size=5, shape=1, fill="transparent") +
+```
+
+```{r fig.retina=5, echo=FALSE, message=FALSE, warning=FALSE, dpi = 85, fig.align="center"}
+#series_plot
+teste
+
+```
+
+---
+
+class: center, middle, inverse
+
+# Fim da apresentação
+## Obrigado!
+
